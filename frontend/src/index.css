@@ -1,0 +1,63 @@
+@import "tailwindcss";
+@import url('https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap');
+:root {
+  --landing-page-gradient: linear-gradient(170deg, #ccf0ff, #ffffff);
+  --navlinks-color: #575757;
+  --navbar-heading: #000;
+  --footer-color: #2e2e2e;
+  --theme-color: #005EF6;
+  --header-text: #000;
+  --header-bottom-text: var(--color-gray-800);
+  --theme-button-color: var(--color-gray-500);
+  --current-theme: var(--color-gray-800);
+  --header-blue-theme: #005EF6;
+  --carousel-heading-font: font-family: "Protest Riot", "Poppins";
+}
+
+.dark {
+  --landing-page-gradient: linear-gradient( 300deg,
+  #12181B 0%,     
+  #12181B 50%,    
+  #1f2937 100%  );
+  --navlinks-color: #b9b9b9;
+  --navbar-heading: #fff;
+  --footer-color: #000000;
+  --theme-color: #005EF6;
+  --header-text: #F8F9FA;
+  --header-bottom-text: var(--color-gray-200);
+  --theme-button-color: var(--color-gray-700);
+  --current-theme: var(--color-gray-500);
+  --header-blue-theme: #3280FF;
+
+}
+* {
+  /* padding: 0;
+  margin: 0; */
+  box-sizing: border-box;
+  font-family: "Poppins", sans-serif;
+  scroll-behavior: smooth;
+  transition: all 0.2s ease-in-out;
+}
+body,
+html {
+  min-height: 100vh;
+  min-width: 100vw;
+  overflow-x: hidden;
+}
+.landing-page {
+  background: var(--landing-page-gradient);
+  /* background-color: var(--landing-page-color); */
+  
+}
+.app {
+    /* width: 80%; */
+    margin: auto;
+}
+body {
+  position: relative;
+}
+.theme-toggle {
+  position: absolute;
+  top: 3.5rem;
+  right: 1rem;
+}
