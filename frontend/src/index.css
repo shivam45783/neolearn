@@ -1,5 +1,6 @@
-@import "tailwindcss";
 @import url('https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap');
+@import "tailwindcss";
+
 :root {
   --landing-page-gradient: linear-gradient(170deg, #ccf0ff, #ffffff);
   --navlinks-color: #575757;
@@ -12,6 +13,13 @@
   --current-theme: var(--color-gray-800);
   --header-blue-theme: #005EF6;
   --carousel-heading-font: font-family: "Protest Riot", "Poppins";
+  --feature-card-bg: rgba(255, 255, 255, 0.605);
+  --feature-card-border: rgba(0, 0, 0, 0.18);
+  --feature-card-title: #111;
+  --feature-card-text: #444;                    
+  --feature-card-badge-bg: rgba(0, 0, 0, 0.139); 
+  --loading-background: #e1ebff;
+
 }
 
 .dark {
@@ -28,7 +36,13 @@
   --theme-button-color: var(--color-gray-700);
   --current-theme: var(--color-gray-500);
   --header-blue-theme: #3280FF;
-
+  --carousel-heading-font: font-family: "Protest Riot", "Poppins";
+  --feature-card-bg: rgba(18, 24, 27, 0.7);
+  --feature-card-border: rgba(255, 255, 255, 0.1);
+  --feature-card-title: #fff;
+  --feature-card-text: #ddd;
+  --feature-card-badge-bg: rgba(255, 255, 255, 0.1);
+  --loading-background: #111;
 }
 * {
   /* padding: 0;

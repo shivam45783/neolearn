@@ -1,0 +1,24 @@
+.highlight-span {
+  position: relative; /* makes the span a container for the img */
+  display: inline-block;
+}
+
+.featured-line-sketch {
+  position: absolute;
+  bottom: -1rem;
+  left: 0;
+  z-index: -1;
+}
+@media (max-width: 768px) {
+  .highlight-span {
+    position: relative;
+    display: inline-block;
+  }
+
+  .featured-line-sketch {
+    position: absolute;
+    bottom: -0.7rem;
+    left: 0;
+    z-index: -1;
+  }
+}

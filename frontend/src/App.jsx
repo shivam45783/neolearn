@@ -5,6 +5,7 @@ import "./index.css";
 import LandingPage from "./pages/LandingPage/LandingPage";
 import Footer from "./components/Footer/Footer";
 import ThemeToggle from "./components/ThemeButton/ThemeButton";
+import Loading from "./components/Loading/Loading";
 
 const BodyClassController = () => {
     const location = useLocation();
@@ -17,6 +18,7 @@ const BodyClassController = () => {
 const App = () => {
   return (
     <>
+    <Loading isLoading={false} />
       <BodyClassController />
       <div className="navbar">{<Navbar />}</div>
       <ThemeToggle />

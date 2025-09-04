@@ -3,7 +3,7 @@ import { assets } from "../../assets/assets";
 import "./Navbar.css";
 const Navbar = () => {
   return (
-    <div className="navbar bg-transparent px-2 py-2 w-full justify-between flex items-center">
+    <div className="navbar bg-transparent px-6 py-2 w-full justify-between flex items-center">
       <div className="flex flex-row items-center  gap-1">
         <img src={assets.logo} alt="" className="w-[40px]" />
         <h1 className="font-semibold text-xl text-[var(--navbar-heading)]">NeoLearn</h1>

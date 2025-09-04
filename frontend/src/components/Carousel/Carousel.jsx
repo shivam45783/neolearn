@@ -23,7 +23,7 @@ const Carousel = ({ slides, autoScroll = true, interval = 4000 }) => {
   };
 
   return (
-    <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden">
+    <div className="relative w-full h-[300px] sm:h-[400px] md:h-[500px] overflow-hidden mt-10 mb-10">
       {/* Slide wrapper */}
       <motion.div
         className="flex w-full h-full"
@@ -42,7 +42,7 @@ const Carousel = ({ slides, autoScroll = true, interval = 4000 }) => {
               <h2 className="text-base sm:text-lg md:text-xl font-bold text-gray-900 mb-1 sm:mb-2">
                 {slide.heading}
               </h2>
-              <p className="text-xs sm:text-sm md:text-base text-gray-700">
+              <p className="font-normal text-xs sm:text-sm md:text-base text-gray-700">
                 {slide.description}
               </p>
             </div>
