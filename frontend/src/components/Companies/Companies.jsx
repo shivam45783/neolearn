@@ -13,6 +13,7 @@ const Companies = () => {
           <img src={assets.adobe} alt="Adobe" />
           <img src={assets.google} alt="Google" className="w-[30px]" />
           <img src={assets.paypal} alt="PayPal" />
+          <img src={assets.walmart} alt="PayPal" />
         </div>
         <div className="companies-bottom flex flex-col justify-center items-center text-center md:mt-15 mt-10">
           <h1 className="md:text-xl text-[16px] text-[var(--header-text)] font-semibold mb-6">

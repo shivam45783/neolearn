@@ -6,6 +6,9 @@ import Companies from "../../components/Companies/Companies.jsx";
 import Carousel from "../../components/Carousel/Carousel.jsx";
 import FeaturedCoursesSection from "../../components/FeaturedCoursesSection/FeaturedCoursesSection.jsx";
 import FeatureCard from "../../components/FeatureCard/FeatureCard.jsx";
+import { useNavigate } from "react-router-dom";
+
+
 
 const slidesData = [
   {
@@ -46,29 +49,34 @@ const featureCardData = [
     hours: "50+",
   },
 ];
+
 const LandingPage = () => {
+  
+
   return (
     <>
-      <Header />
-      <div className="flex justify-center">
-        <Companies />
-      </div>
-      <div className="carousel-component w-full">
-        <Carousel slides={slidesData} />
-      </div>
-      <div className="featured-component w-full ">
-        <FeaturedCoursesSection />
-      </div>
-      <div className="featured-card-row w-full flex flex-wrap justify-evenly gap-5 mb-20 md:mb-30">
-        {featureCardData.map((card, index) => (
-          <FeatureCard
-            key={index}
-            image={card.image}
-            title={card.title}
-            rating={card.rating}
-            hours={card.hours}
-          />
-        ))}
+      <div className="page-transition">
+        <Header />
+        <div className="flex justify-center">
+          <Companies />
+        </div>
+        <div className="carousel-component w-full">
+          <Carousel slides={slidesData} />
+        </div>
+        <div className="featured-component w-full ">
+          <FeaturedCoursesSection />
+        </div>
+        <div className="featured-card-row w-full flex flex-wrap justify-evenly gap-5 mb-20 md:mb-30">
+          {featureCardData.map((card, index) => (
+            <FeatureCard
+              key={index}
+              image={card.image}
+              title={card.title}
+              rating={card.rating}
+              hours={card.hours}
+            />
+          ))}
+        </div>
       </div>
     </>
   );

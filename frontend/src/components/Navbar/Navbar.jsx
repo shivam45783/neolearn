@@ -1,7 +1,13 @@
 import React from "react";
 import { assets } from "../../assets/assets";
 import "./Navbar.css";
+import { useNavigate } from "react-router-dom";
 const Navbar = () => {
+  const navigate = useNavigate();
+  const navigateAuth = () => {
+    navigate("/auth");
+  };
+
   return (
     <div className="navbar bg-transparent px-6 py-2 w-full justify-between flex items-center">
       <div className="flex flex-row items-center  gap-1">
@@ -31,7 +37,7 @@ const Navbar = () => {
         <div className="btn">
           <button
             className="create-account-btn bg-[#005EF6] text-white py-2 px-4 rounded-xl text-[13px] font-medium hover:cursor-pointer hover:bg-[#0046C7]
-        "
+        " onClick={navigateAuth}
           >
             Create Account
           </button>

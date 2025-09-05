@@ -1,8 +1,8 @@
 @import url('https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap');
 @import "tailwindcss";
-
 :root {
   --landing-page-gradient: linear-gradient(170deg, #ccf0ff, #ffffff);
+  --auth-page-gradient: linear-gradient(170deg, #ccf0ff, #ffffff);
   --navlinks-color: #575757;
   --navbar-heading: #000;
   --footer-color: #2e2e2e;
@@ -14,11 +14,13 @@
   --header-blue-theme: #005EF6;
   --carousel-heading-font: font-family: "Protest Riot", "Poppins";
   --feature-card-bg: rgba(255, 255, 255, 0.605);
-  --feature-card-border: rgba(0, 0, 0, 0.18);
+  --feature-card-border: rgba(0, 0, 0, 0.162);
   --feature-card-title: #111;
   --feature-card-text: #444;                    
   --feature-card-badge-bg: rgba(0, 0, 0, 0.139); 
   --loading-background: #e1ebff;
+  --login-visual-background: --landing-page-gradient: linear-gradient(170deg, #ccf0ff, #ffffff);
+  --protest-riot-font:"Protest Riot", "Poppins";
 
 }
 
@@ -27,6 +29,10 @@
   #12181B 0%,     
   #12181B 50%,    
   #1f2937 100%  );
+  --auth-page-gradient: linear-gradient( 300deg,
+  #12181B 0%,     
+  #12181B 50%,    
+  #1f2937 100%);
   --navlinks-color: #b9b9b9;
   --navbar-heading: #fff;
   --footer-color: #000000;
@@ -43,6 +49,11 @@
   --feature-card-text: #ddd;
   --feature-card-badge-bg: rgba(255, 255, 255, 0.1);
   --loading-background: #111;
+   --login-visual-background: linear-gradient( 300deg,
+  #12181B 0%,     
+  #12181B 50%,    
+  #1f2937 100%  );
+  --protest-riot-font:"Protest Riot", "Poppins";
 }
 * {
   /* padding: 0;
@@ -63,6 +74,13 @@ html {
   /* background-color: var(--landing-page-color); */
   
 }
+.auth-page {
+  /* background: var(--auth-page-gradient); */
+  background-image: url("./auth_bg_image.jpg");
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+}
 .app {
     /* width: 80%; */
     margin: auto;
@@ -74,4 +92,20 @@ body {
   position: absolute;
   top: 3.5rem;
   right: 1rem;
+}
+
+@keyframes smoothPagePopup { 
+  0% { 
+    opacity: 0; 
+    transform: scale(0.98) translateY(10px); 
+  } 
+  100% { 
+    opacity: 1; 
+    transform: scale(1) translateY(0); 
+  } 
+} 
+
+.page-transition { 
+  animation: smoothPagePopup 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
+  will-change: transform, opacity;  
 }
