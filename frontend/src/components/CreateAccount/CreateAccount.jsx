@@ -1,26 +1,18 @@
-import React, { use, useContext } from "react";
+import React, { useContext } from "react";
 import { StudentContext } from "../../context/StudentContext";
 import { assets } from "../../assets/assets";
-import "./Login.css";
-import axios from "axios";
-import { GeneralContext } from "../../context/GeneralContext";
+// import "./Login.css"; // same styles
 
-
-const Login = ({ switchToSignup }) => {
+const CreateAccount = ({ switchToLogin }) => {
   const { role, setRole } = useContext(StudentContext);
-  const {url,setLoading} = useContext(GeneralContext);
-  const redirectGoogleLogin = async () => {
-    setLoading(true);
-    window.location.href = `${url}/api/auth/google`;
-    // setLoading(false);
-  }
+
   return (
-    <div className="login-container min-h-screen flex items-center justify-center md:justify-end bg-gradient-to-br p-6">
-      <div className="login-card bg-[var(--login-card-bg)] shadow-xl rounded-2xl p-8 w-full max-w-md h-auto page-transition flex flex-col">
+    <div className="login-container min-h-screen flex items-center justify-center md:justify-end bg-gradient-to-br p-6 ">
+      <div className="login-card bg-[var(--login-card-bg)] shadow-xl rounded-2xl p-8 w-full max-w-md h-auto page-transition">
         <div className="login-title flex flex-col items-center gap-2">
           <img src={assets.logo} alt="" className="w-[70px]" />
           <h1 className="text-3xl font-semibold text-center mb-6 text-[var(--header-text)]">
-            Login
+            Create Account
           </h1>
         </div>
 
@@ -41,8 +33,19 @@ const Login = ({ switchToSignup }) => {
           ))}
         </div>
 
-        {/* Login Form */}
-        <form className="space-y-4">
+        {/* Create Account Form */}
+        <form className="space-y-3">
+          <div>
+            <label className="block text-[var(--header-bottom-text)] text-sm mb-1 font-medium">
+              Name
+            </label>
+            <input
+              type="text"
+              placeholder="Enter your name"
+              className="w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
+            />
+          </div>
+
           <div>
             <label className="block text-[var(--header-bottom-text)] text-sm mb-1 font-medium">
               Email
@@ -50,7 +53,7 @@ const Login = ({ switchToSignup }) => {
             <input
               type="email"
               placeholder="Enter your email"
-              className="email-textbox w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
+              className="w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
             />
           </div>
 
@@ -61,7 +64,7 @@ const Login = ({ switchToSignup }) => {
             <input
               type="password"
               placeholder="Enter your password"
-              className="password-textbox w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
+              className="w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
             />
           </div>
 
@@ -69,25 +72,22 @@ const Login = ({ switchToSignup }) => {
             type="submit"
             className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
           >
-            Login as {role.charAt(0).toUpperCase() + role.slice(1)}
+            Sign Up as {role.charAt(0).toUpperCase() + role.slice(1)}
           </button>
         </form>
 
         <p className="mt-4 text-sm text-center text-[var(--login-card-bottom-text)] hover:cursor-pointer">
-          Don’t have an account?{" "}
+          Already have an account?{" "}
           <span
-            onClick={switchToSignup}
-            className="text-[var(--header-blue-theme)] hover:underline"
+            onClick={switchToLogin}
+            className="text-[var(--header-blue-theme)] hover:underline hover:cursor-pointer"
           >
-            Sign up
+            Login
           </span>
         </p>
         <hr className="mt-3 mb-3 border-[var(--login-card-bottom-text)]" />
-        <div className="googleAuth flex gap-3 p-3 rounded-lg items-center justify-center"
-        onClick={redirectGoogleLogin}
-        
-        >
-          <img src={assets.google} alt="" className="w-[25px]"/>
+        <div className="googleAuth flex gap-3 p-3 rounded-lg items-center justify-center">
+          <img src={assets.google} alt="" className="w-[25px]  " />
           <p className="text-[var(--header-bottom-text)] font-medium text-md">
             Continue with Google
           </p>
@@ -97,4 +97,4 @@ const Login = ({ switchToSignup }) => {
   );
 };
 
-export default Login;
+export default CreateAccount;

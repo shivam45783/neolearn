@@ -1,13 +1,3 @@
-.login-card {
-  /* border-radius: 16px 0px 0px 16px; */
-  box-shadow: 0 8px 42px 0 rgba(0, 0, 0, 0.37);
-  /* border: 1.5px solid rgba(0, 0, 0, 0.653); */
-}
-.email-textbox,
-.password-textbox {
-  /* box-shadow: 0 8px 42px 0 rgba(0, 0, 0, 0.37); */
-  border-color: var(--login-border-color);
-}
 .googleAuth {
   background-color: var(--googleAuth-color);
   backdrop-filter: blur(20px) saturate(180%);

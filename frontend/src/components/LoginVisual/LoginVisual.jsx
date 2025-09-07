@@ -3,7 +3,7 @@ import { assets } from "../../assets/assets";
 import "./LoginVisual.css";
 const LoginVisual = () => {
   return (
-    <div className="auth-visual-transparent h-lvh flex flex-col justify-between auth-page">
+    <div className="auth-visual-transparent h-lvh flex flex-col justify-between top-0 bottom-0">
       <div className="auth-visual-top">
         <div className="auth-logo mt-5 flex flex-col justify-center items-center gap-1.5">
           <img src={assets.logo} alt="" className="w-[80px]" />
@@ -13,7 +13,7 @@ const LoginVisual = () => {
         </div>
         <div className=" mt-5">
           <p className="auth-description text-[var(--header-bottom-text)] font-medium text-xl">
-            The future of learning starts here.
+            Empowering learning through technology and innovation.
           </p>
         </div>
       </div>

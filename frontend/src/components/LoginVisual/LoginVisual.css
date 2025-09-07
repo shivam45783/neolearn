@@ -5,10 +5,12 @@
   font-family: var(--protest-riot-font);
 }
 .auth-visual-transparent {
-    /* background: rgba(255, 255, 255, 0.1);  */
+    /* background: rgb(255, 255, 255);  */
     background: var(--auth-page-gradient);
-  backdrop-filter: blur(12px) saturate(180%);
-  -webkit-backdrop-filter: blur(12px) saturate(180%);
+    /* background-color: rgba(255, 255, 255, 0); */
+    /* background-color: rgb(255, 255, 255); */
+  backdrop-filter: blur(20px) saturate(180%);
+  -webkit-backdrop-filter: blur(22px) saturate(180%);
   border-radius: 0px 16px 16px 0px;
   border: 1px solid rgba(255, 255, 255, 0.2);
   box-shadow: 0 8px 32px 0 rgba(31, 38, 135, 0.1);

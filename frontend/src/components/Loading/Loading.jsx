@@ -7,7 +7,7 @@ const Loading = ({ isLoading }) => {
   return (
     <>
       {isLoading && (
-        <div className="loading-screen">
+        <div className="loading-screen page-transition">
           <div className="logo-wrapper">
             <img src={assets.logo} alt="logo" className="logo" />
             <div className="fill-animation"></div>

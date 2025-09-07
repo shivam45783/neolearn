@@ -7,11 +7,14 @@ import App from "./App.jsx";
 import StudentContextProvider, {
   StudentContext,
 } from "./context/StudentContext.jsx";
+import GeneralContextProvider from "./context/GeneralContext.jsx";
 
 createRoot(document.getElementById("root")).render(
   <BrowserRouter>
-    <StudentContextProvider>
-      <App />
-    </StudentContextProvider>
+    <GeneralContextProvider>
+      <StudentContextProvider>
+        <App />
+      </StudentContextProvider>
+    </GeneralContextProvider>
   </BrowserRouter>
 );

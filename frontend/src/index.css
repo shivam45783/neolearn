@@ -2,7 +2,7 @@
 @import "tailwindcss";
 :root {
   --landing-page-gradient: linear-gradient(170deg, #ccf0ff, #ffffff);
-  --auth-page-gradient: linear-gradient(170deg, #ccf0ff, #ffffff);
+  --auth-page-gradient: linear-gradient(170deg, #92deffe4, #ffffffe1);
   --navlinks-color: #575757;
   --navbar-heading: #000;
   --footer-color: #2e2e2e;
@@ -21,7 +21,11 @@
   --loading-background: #e1ebff;
   --login-visual-background: --landing-page-gradient: linear-gradient(170deg, #ccf0ff, #ffffff);
   --protest-riot-font:"Protest Riot", "Poppins";
-
+  --login-card-bg: #fff;
+  --login-card-bottom-text: var(--color-gray-600);
+  --login-border-color: var(--color-gray-300);
+  --googleAuth-color: rgba(0, 0, 0, 0.158);
+  --googleAuth-color-hover: rgba(0, 0, 0, 0.263);
 }
 
 .dark {
@@ -30,9 +34,9 @@
   #12181B 50%,    
   #1f2937 100%  );
   --auth-page-gradient: linear-gradient( 300deg,
-  #12181B 0%,     
-  #12181B 50%,    
-  #1f2937 100%);
+  #12181bed 0%,     
+  #12181bea 50%,    
+  #1f2937f0 100%);
   --navlinks-color: #b9b9b9;
   --navbar-heading: #fff;
   --footer-color: #000000;
@@ -54,6 +58,11 @@
   #12181B 50%,    
   #1f2937 100%  );
   --protest-riot-font:"Protest Riot", "Poppins";
+  --login-card-bg: #12181b;
+  --login-card-bottom-text: var(--color-gray-400);
+  --login-border-color: var(--color-gray-600);
+  --googleAuth-color: rgba(255, 255, 255, 0.148);
+  --googleAuth-color-hover: rgba(255, 255, 255, 0.25);
 }
 * {
   /* padding: 0;
@@ -83,10 +92,11 @@ html {
 }
 .app {
     /* width: 80%; */
-    margin: auto;
+    /* margin: auto; */
 }
 body {
   position: relative;
+  /* background-image: url("./auth_bg_image.jpg"); */
 }
 .theme-toggle {
   position: absolute;
