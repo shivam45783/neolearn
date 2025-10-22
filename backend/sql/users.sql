@@ -1,0 +1,16 @@
+-- Active: 1752431765914@@127.0.0.1@3306@neolearn
+CREATE TABLE users (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100) NOT NULL,
+    email VARCHAR(100) UNIQUE NOT NULL,
+    password VARCHAR(100) NOT NULL,
+    isEmailVerified BOOLEAN DEFAULT FALSE,
+    role ENUM(
+        'Student',
+        'Admin',
+        'Instructor'
+    ) NOT NULL,
+    otp VARCHAR(6) DEFAULT NULL,
+    createdAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    updatedAt TIMESTAMP DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP
+);

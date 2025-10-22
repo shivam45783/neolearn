@@ -41,7 +41,7 @@ const App = () => {
             path="/"
             element={<LandingPage />}
           ></Route>
-          <Route path="/auth" element={<Auth />}></Route>
+          <Route path="/auth" element={<Auth/>}></Route>
         </Routes>
       </div>
       <div className="footer page-transition">{!hideLayout && <Footer />}</div>

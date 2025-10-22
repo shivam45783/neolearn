@@ -1,12 +1,5 @@
-// This is your Prisma schema file,
-// learn more about it in the docs: https://pris.ly/d/prisma-schema
-
-// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
-// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
-
 generator client {
   provider = "prisma-client-js"
-  // output   = "../generated/prisma"
 }
 
 datasource db {
@@ -14,37 +7,3 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
-model User {
-  id              Int            @id @default(autoincrement())
-  name            String
-  email           String         @unique
-  password        String
-  isEmailVerified Boolean        @default(false)
-  role            Role           @default(student)
-  createdAt       DateTime       @default(now())
-  updatedAt       DateTime       @updatedAt
-  oauthAccounts   OAuthAccount[]
-}
-
-enum Role {
-  student
-  instructor
-  admin
-}
-
-model OAuthAccount {
-  id                Int      @id @default(autoincrement())
-  userId            Int
-  provider          Provider @default(google)
-  // provider Provider 
-  providerAccountId String   @unique
-  createdAt         DateTime @default(now())
-  user              User     @relation(fields: [userId], references: [id], onDelete: Cascade)
-}
-
-enum Provider {
-  google
-  // microsoft
-  // facebook
-  // github
-}

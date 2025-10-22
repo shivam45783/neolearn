@@ -14,7 +14,11 @@ const FeatureCard = ({ image, title, rating, hours }) => {
         className="rounded-xl overflow-hidden"
         style={{ border: "1px solid var(--feature-card-border)" }}
       >
-        <img src={image} alt={title} className="w-full h-44 object-cover aspect-[16/9]" />
+        <img
+          src={image}
+          alt={title}
+          className="w-full h-44 object-cover aspect-[16/9]"
+        />
       </div>
       <h3
         className="mt-4 text-xl font-semibold"
@@ -28,6 +32,7 @@ const FeatureCard = ({ image, title, rating, hours }) => {
           style={{
             background: "var(--feature-card-badge-bg)",
             color: "var(--feature-card-text)",
+            border: "0.1px solid var(--feature-card-border)",
           }}
         >
           <Star size={14} className="text-yellow-300 fill-yellow-300" />
@@ -38,6 +43,7 @@ const FeatureCard = ({ image, title, rating, hours }) => {
           style={{
             background: "var(--feature-card-badge-bg)",
             color: "var(--feature-card-text)",
+            border: "0.1px solid var(--feature-card-border)",
           }}
         >
           {hours} total hours

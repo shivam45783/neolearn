@@ -2,12 +2,12 @@ import express from "express";
 import prisma from "./utils/db.js";
 import cors from "cors";
 import { PrismaClient } from "@prisma/client";
-import authRouter from "./routes/auth.route.js";
 // const prisma = new PrismaClient();
 import cookieParser from "cookie-parser";
-
+import authRouter from "./routes/auth.routes.js";
 const app = express();
-const port = 3000 || process.env.PORT;
+const port = process.env.PORT || 3000;
+
 
 app.use(express.json());
 app.use(cors({ origin: "*", credentials: true }));
@@ -32,5 +32,9 @@ async function startServer() {
     process.exit(1);
   }
 }
+process.on("SIGINT", async () => {
+  await prisma.$disconnect();
+  process.exit(0);
+});
 
 startServer();

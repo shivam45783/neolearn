@@ -5,15 +5,9 @@ import "./Login.css";
 import axios from "axios";
 import { GeneralContext } from "../../context/GeneralContext";
 
-
 const Login = ({ switchToSignup }) => {
   const { role, setRole } = useContext(StudentContext);
-  const {url,setLoading} = useContext(GeneralContext);
-  const redirectGoogleLogin = async () => {
-    setLoading(true);
-    window.location.href = `${url}/api/auth/google`;
-    // setLoading(false);
-  }
+  const { backend_url, setLoading } = useContext(GeneralContext);
   return (
     <div className="login-container min-h-screen flex items-center justify-center md:justify-end bg-gradient-to-br p-6">
       <div className="login-card bg-[var(--login-card-bg)] shadow-xl rounded-2xl p-8 w-full max-w-md h-auto page-transition flex flex-col">
@@ -26,11 +20,11 @@ const Login = ({ switchToSignup }) => {
 
         {/* Role Selection */}
         <div className="flex justify-between mb-6 text-[15px]">
-          {["student", "teacher", "admin"].map((r) => (
+          {["Student", "Instructor", "Admin"].map((r) => (
             <button
               key={r}
               onClick={() => setRole(r)}
-              className={`flex-1 mx-1 py-2 rounded-lg font-medium capitalize transition ${
+              className={`flex-1 mx-1 py-2 rounded-lg font-medium capitalize transition cursor-pointer ${
                 role === r
                   ? "bg-blue-600 text-white shadow-md"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -67,7 +61,7 @@ const Login = ({ switchToSignup }) => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold cursor-pointer hover:bg-blue-700 transition"
           >
             Login as {role.charAt(0).toUpperCase() + role.slice(1)}
           </button>
@@ -82,16 +76,7 @@ const Login = ({ switchToSignup }) => {
             Sign up
           </span>
         </p>
-        <hr className="mt-3 mb-3 border-[var(--login-card-bottom-text)]" />
-        <div className="googleAuth flex gap-3 p-3 rounded-lg items-center justify-center"
-        onClick={redirectGoogleLogin}
         
-        >
-          <img src={assets.google} alt="" className="w-[25px]"/>
-          <p className="text-[var(--header-bottom-text)] font-medium text-md">
-            Continue with Google
-          </p>
-        </div>
       </div>
     </div>
   );

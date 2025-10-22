@@ -18,11 +18,11 @@ const CreateAccount = ({ switchToLogin }) => {
 
         {/* Role Selection */}
         <div className="flex justify-between mb-6 text-[15px]">
-          {["student", "teacher", "admin"].map((r) => (
+          {["Student", "Instructor", "Admin"].map((r) => (
             <button
               key={r}
               onClick={() => setRole(r)}
-              className={`flex-1 mx-1 py-2 rounded-lg font-medium capitalize transition ${
+              className={`flex-1 mx-1 py-2 rounded-lg font-medium capitalize transition cursor-pointer ${
                 role === r
                   ? "bg-blue-600 text-white shadow-md"
                   : "bg-gray-100 text-gray-700 hover:bg-gray-200"
@@ -70,7 +70,7 @@ const CreateAccount = ({ switchToLogin }) => {
 
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold hover:bg-blue-700 transition"
+            className="w-full bg-blue-600 text-white py-2 rounded-lg font-semibold cursor-pointer hover:bg-blue-700 transition"
           >
             Sign Up as {role.charAt(0).toUpperCase() + role.slice(1)}
           </button>
@@ -85,13 +85,6 @@ const CreateAccount = ({ switchToLogin }) => {
             Login
           </span>
         </p>
-        <hr className="mt-3 mb-3 border-[var(--login-card-bottom-text)]" />
-        <div className="googleAuth flex gap-3 p-3 rounded-lg items-center justify-center">
-          <img src={assets.google} alt="" className="w-[25px]  " />
-          <p className="text-[var(--header-bottom-text)] font-medium text-md">
-            Continue with Google
-          </p>
-        </div>
       </div>
     </div>
   );

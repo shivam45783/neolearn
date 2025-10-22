@@ -1,23 +1,23 @@
-@import url('https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap');
+/* @import url('https://fonts.googleapis.com/css2?family=Protest+Riot&display=swap'); */
 @import "tailwindcss";
 :root {
-  --landing-page-gradient: linear-gradient(170deg, #ccf0ff, #ffffff);
+  --landing-page-gradient: linear-gradient(170deg, #b6e9ff, #ffffff);
   --auth-page-gradient: linear-gradient(170deg, #92deffe4, #ffffffe1);
   --navlinks-color: #575757;
   --navbar-heading: #000;
-  --footer-color: #2e2e2e;
+  --footer-color: #1b1b1b;
   --theme-color: #005EF6;
   --header-text: #000;
   --header-bottom-text: var(--color-gray-800);
   --theme-button-color: var(--color-gray-500);
   --current-theme: var(--color-gray-800);
   --header-blue-theme: #005EF6;
-  --carousel-heading-font: font-family: "Protest Riot", "Poppins";
+  /* --carousel-heading-font: font-family: "Protest Riot", "Poppins"; */
   --feature-card-bg: rgba(255, 255, 255, 0.605);
   --feature-card-border: rgba(0, 0, 0, 0.162);
   --feature-card-title: #111;
   --feature-card-text: #444;                    
-  --feature-card-badge-bg: rgba(0, 0, 0, 0.139); 
+  --feature-card-badge-bg: rgba(0, 0, 0, 0.025); 
   --loading-background: #e1ebff;
   --login-visual-background: --landing-page-gradient: linear-gradient(170deg, #ccf0ff, #ffffff);
   --protest-riot-font:"Protest Riot", "Poppins";
@@ -46,9 +46,9 @@
   --theme-button-color: var(--color-gray-700);
   --current-theme: var(--color-gray-500);
   --header-blue-theme: #3280FF;
-  --carousel-heading-font: font-family: "Protest Riot", "Poppins";
-  --feature-card-bg: rgba(18, 24, 27, 0.7);
-  --feature-card-border: rgba(255, 255, 255, 0.1);
+  /* --carousel-heading-font: font-family: "Protest Riot", "Poppins"; */
+  --feature-card-bg: rgba(18, 24, 27, 0.9);
+  --feature-card-border: rgba(255, 255, 255, 0.2);
   --feature-card-title: #fff;
   --feature-card-text: #ddd;
   --feature-card-badge-bg: rgba(255, 255, 255, 0.1);
@@ -90,10 +90,7 @@ html {
   background-position: center;
   background-repeat: no-repeat;
 }
-.app {
-    /* width: 80%; */
-    /* margin: auto; */
-}
+
 body {
   position: relative;
   /* background-image: url("./auth_bg_image.jpg"); */
@@ -118,4 +115,9 @@ body {
 .page-transition { 
   animation: smoothPagePopup 0.4s cubic-bezier(0.4, 0, 0.2, 1); 
   will-change: transform, opacity;  
+}
+html.no-scroll,
+body.no-scroll {
+  overflow: hidden;
+  height: 100%;   /* ensure full blocking */
 }

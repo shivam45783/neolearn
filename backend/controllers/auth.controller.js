@@ -1,87 +1,75 @@
-// import  prisma from "../index.js";
-import {
-  Google,
-  decodeIdToken,
-  generateCodeVerifier,
-  generateState,
-} from "arctic";
+import jsonwebtoken from "jsonwebtoken";
 import bcrypt from "bcrypt";
-import jwt from "jsonwebtoken";
-// const google  = new arctic.Google(cleintId)
-import { OAUTH_EXCHANGE_EXPIRY } from "../config/constants.js";
-import { google } from "../lib/oauth/google.js";
-import { json } from "express";
-import { getUserWithOAuthId } from "../services/auth.service.js";
+import prisma from "../utils/db.js";
+import validator from "validator";
 
-const getGoogleLoginPage = async (req, res) => {
-  // res.send("Hello Google");
-  if (req.user) return res.redirect("/dashboard");
-  const state = generateState();
-  const codeVerifier = generateCodeVerifier();
-
-  const url = google.createAuthorizationURL(state, codeVerifier, [
-    "openid", // this is called scopes, here we are giving openid and profile
-    "profile",
-    "email",
-  ]);
-
-  const cookieConfig = {
-    httpOnly: true,
-    secure: true,
-    maxAge: OAUTH_EXCHANGE_EXPIRY, // 1 day
-    sameSite: "lax", // this is such that when google redirect to our callback url, it will maintain the cookies
-  };
-  res.cookie("google_oauth_state", state, cookieConfig);
-  res.cookie("google_code_verifier", codeVerifier, cookieConfig);
-  res.redirect(url.toString());
-  console.log(url.toString());
+const createToken = (user) => {
+  const token = jsonwebtoken.sign(
+    {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "1d",
+    }
+  );
+  return token;
 };
 
-const getGoogleLoginCallback = async (req, res) => {
-  // google redirects with code and state in query params ans we will use this code to find out the user
-  const { code, state } = req.query;
-  console.log(code, state);
+const registerUser = async (req, res) => {
+  const { name, email, password, role } = req.body;
 
-  const {
-    google_oauth_state: storedState,
-    google_code_verifier: codeVerifier,
-  } = req.cookies;
-
-  if (
-    !code ||
-    !state ||
-    !storedState ||
-    !codeVerifier ||
-    state !== storedState
-  ) {
-    req.flash(
-      "error",
-      "Couldn't login with Google because of invalid login attempt. Please try again!"
-    );
-    return res.redirect("/auth");
-  }
-
-  let tokens;
   try {
-    tokens = await google.validateAuthorizationCode(code, codeVerifier);
-  } catch (error) {
-    req.flash(
-      "error",
-      "Couldn't login with Google because of invalid login attempt. Please try again!"
-    );
-    return res.redirect("/auth");
-  }
-  console.log("token:", tokens);
-  const claims = decodeIdToken(tokens.idToken());
-  const { sub: googleUserId, name, email } = claims;
+    const existingUser =
+      await prisma.$queryRaw`SELECT * FROM users WHERE email = ${email}`;
+    if (existingUser && existingUser.otp === null) {
+      return res.json({
+        success: false,
+        message: "User already exists",
+        status: 409,
+      });
+    }
 
-  // if user is already linked with google account
-  let user = await getUserWithOAuthId({ email, provider: "google" });
+    if (!validator.isEmail(email)) {
+      return res.json({
+        success: false,
+        message: "Invalid email",
+        status: 400,
+      });
+    }
 
-  // if user exists but is not linked with oauth
-  if (user && !user.providerAccountId) {
+    if (password.length < 8) {
+      return res.json({
+        success: false,
+        message: "Password must be at least 8 characters",
+        status: 400,
+      });
+    }
+
+    const hashedPassword = bcrypt.hashSync(password, 10);
+    const user =
+      await prisma.$queryRaw`INSERT INTO users (name, email, password, role) VALUES (${name}, ${email}, ${hashedPassword}, ${role})`;
+
+    const userCreated = await prisma.$queryRaw`SELECT * FROM users WHERE email = ${email}`;
+    const token = createToken(userCreated);
+    console.log("user", userCreated);
     
+    return res.json({
+      success: true,
+      message: "User registered successfully",
+      status: 201,
+      data: { user: userCreated[0], token },
+    });
+  } catch (e) {
+    console.log(JSON.stringify(e, null, 2));
+    return res.json({
+      success: false,
+      message: "Something went wrong",
+      status: 500,
+    });
   }
 };
 
-export { getGoogleLoginPage, getGoogleLoginCallback };
+export { registerUser };

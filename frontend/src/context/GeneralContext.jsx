@@ -1,12 +1,23 @@
 import React, { createContext, useState } from "react";
+import { useEffect } from "react";
 
 export const GeneralContext = createContext();
 
 const GeneralContextProvider = (props) => {
-  const url = "http://localhost:3000";
+  const backend_url = "http://localhost:3000";
   const [loading, setLoading] = useState(false);
+  useEffect(() => {
+    if (loading) {
+      document.documentElement.classList.add("no-scroll"); // html
+      document.body.classList.add("no-scroll"); // body
+    } else {
+      document.documentElement.classList.remove("no-scroll");
+      document.body.classList.remove("no-scroll");
+    }
+  }, [loading]);
+
   const contextValue = {
-    url,
+    backend_url,
     loading,
     setLoading,
   };
