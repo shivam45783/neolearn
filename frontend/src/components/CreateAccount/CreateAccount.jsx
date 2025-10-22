@@ -1,11 +1,31 @@
 import React, { useContext } from "react";
 import { StudentContext } from "../../context/StudentContext";
 import { assets } from "../../assets/assets";
+import { useState } from "react";
+import { useEffect } from "react";
 // import "./Login.css"; // same styles
 
 const CreateAccount = ({ switchToLogin }) => {
   const { role, setRole } = useContext(StudentContext);
-
+  const [formData, setFormData] = useState({
+    name: "",
+    email: "",
+    password: "",
+    role: role,
+  });
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      role: role,
+    }));
+  }, [role]);
+  const onSubmitHandler = ()=>{
+    const { name, email, password, role } = formData;
+    
+  }
   return (
     <div className="login-container min-h-screen flex items-center justify-center md:justify-end bg-gradient-to-br p-6 ">
       <div className="login-card bg-[var(--login-card-bg)] shadow-xl rounded-2xl p-8 w-full max-w-md h-auto page-transition">
@@ -34,7 +54,7 @@ const CreateAccount = ({ switchToLogin }) => {
         </div>
 
         {/* Create Account Form */}
-        <form className="space-y-3">
+        <form className="space-y-3" onSubmit={onSubmitHandler}>
           <div>
             <label className="block text-[var(--header-bottom-text)] text-sm mb-1 font-medium">
               Name
@@ -43,6 +63,12 @@ const CreateAccount = ({ switchToLogin }) => {
               type="text"
               placeholder="Enter your name"
               className="w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
+              onChange={(e) => {
+                setFormData({
+                  ...formData,
+                  name: e.target.value,
+                });
+              }}
             />
           </div>
 
@@ -54,6 +80,12 @@ const CreateAccount = ({ switchToLogin }) => {
               type="email"
               placeholder="Enter your email"
               className="w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
+              onChange={(e) => {
+                setFormData({
+                  ...formData,
+                  email: e.target.value,
+                });
+              }}
             />
           </div>
 
@@ -65,6 +97,12 @@ const CreateAccount = ({ switchToLogin }) => {
               type="password"
               placeholder="Enter your password"
               className="w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
+              onChange={(e) => {
+                setFormData({
+                  ...formData,
+                  password: e.target.value,
+                });
+              }}
             />
           </div>
 

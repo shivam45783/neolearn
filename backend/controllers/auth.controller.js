@@ -1,10 +1,10 @@
-import jsonwebtoken from "jsonwebtoken";
+import jwt from "jsonwebtoken";
 import bcrypt from "bcrypt";
 import prisma from "../utils/db.js";
 import validator from "validator";
 
 const createToken = (user) => {
-  const token = jsonwebtoken.sign(
+  const token = jwt.sign(
     {
       id: user.id,
       email: user.email,
@@ -31,7 +31,6 @@ const registerUser = async (req, res) => {
         status: 409,
       });
     }
-
     if (!validator.isEmail(email)) {
       return res.json({
         success: false,
@@ -53,8 +52,8 @@ const registerUser = async (req, res) => {
       await prisma.$queryRaw`INSERT INTO users (name, email, password, role) VALUES (${name}, ${email}, ${hashedPassword}, ${role})`;
 
     const userCreated = await prisma.$queryRaw`SELECT * FROM users WHERE email = ${email}`;
-    const token = createToken(userCreated);
-    console.log("user", userCreated);
+    const token = createToken(userCreated[0]);
+    console.log("user", userCreated[0]);
     
     return res.json({
       success: true,

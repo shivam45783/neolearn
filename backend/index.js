@@ -5,6 +5,7 @@ import { PrismaClient } from "@prisma/client";
 // const prisma = new PrismaClient();
 import cookieParser from "cookie-parser";
 import authRouter from "./routes/auth.routes.js";
+import mailRouter from "./routes/mail.routes.js";
 const app = express();
 const port = process.env.PORT || 3000;
 
@@ -18,6 +19,7 @@ app.get("/", (req, res) => {
 
 
 app.use("/api/auth", authRouter);
+app.use("/api/mail", mailRouter);
 
 async function startServer() {
   try {

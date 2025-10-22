@@ -3,7 +3,7 @@ import React, { useState,useEffect, createContext } from "react";
 export const StudentContext = createContext();
 
 const StudentContextProvider = (props) => {
-  const [role, setRole] = useState("student");
+  const [role, setRole] = useState("Student");
   const contextValue = {
     role,
     setRole,
