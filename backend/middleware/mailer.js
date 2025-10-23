@@ -43,6 +43,8 @@ const sendMail = async (req, res) => {
       <meta charset="UTF-8" />
       <title>NeoLearn OTP Verification</title>
       <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:ital,wght@0,100;0,200;0,300;0,400;0,500;0,600;0,700;0,800;0,900;1,100;1,200;1,300;1,400;1,500;1,600;1,700;1,800;1,900&display=swap');
+
         @media only screen and (max-width: 700px) {
           .container {
             width: 90% !important;
@@ -64,13 +66,14 @@ const sendMail = async (req, res) => {
         }
       </style>
     </head>
-    <body style="margin: 0; padding: 0;">
+    <body style="margin: 0; padding: 0; font-family: 'Poppins', sans-serif;">
       <table width="100%" cellpadding="0" cellspacing="0" border="0"
-        style="background: linear-gradient(to right, #0f172a, #1e293b); min-height: 100vh; width: 100%; text-align: center;">
+        style="background-color: #243554;
+ min-height: 100vh; width: 100%; text-align: center;">
         <tr>
           <td align="center" style="padding: 40px 0;">
             <table class="container" width="100%" cellpadding="0" cellspacing="0" border="0"
-              style="max-width: 500px; background: #1f2937; border-radius: 15px; padding: 30px; text-align: center; font-family: 'Poppins', sans-serif; box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);">
+              style="max-width: 500px; background: #12181b; border-radius: 15px; padding: 30px; text-align: center;  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.25);">
               <tr>
                 <td>
                   <img src="${logoUrl}" alt="NeoLearn Logo" width="70"/>
@@ -78,7 +81,7 @@ const sendMail = async (req, res) => {
                   <h2 class="title" style="font-size: 24px; font-weight: 700; color: #fff; margin: 0 0 15px;">${subject}</h2>
                   <p class="message" style="font-size: 16px; color: #cbd5e1; margin: 0 0 25px;">
                     Hello ${name}👋,<br />
-                    Use the OTP below to verify your email address. It is valid for the next 10 minutes.
+                    Use the OTP below to verify your email address.
                   </p>
                   <div class="otp" style="display: inline-block; padding: 15px 30px; font-size: 22px; font-weight: bold; color: #fff; background: linear-gradient(to right, #3b82f6, #60a5fa); border-radius: 10px; letter-spacing: 4px; margin-bottom: 25px;">
                     ${otp}
@@ -108,6 +111,7 @@ const sendMail = async (req, res) => {
         );
       } else {
         console.log("Email sent: " + info.response);
+        // await prisma.$queryRaw`UPDATE users SET isEmailVerified = true WHERE email = ${email}`;
         res.status(200).json({
           success: true,
           message: "Email sent successfully",

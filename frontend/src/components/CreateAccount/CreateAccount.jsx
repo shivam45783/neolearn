@@ -3,10 +3,13 @@ import { StudentContext } from "../../context/StudentContext";
 import { assets } from "../../assets/assets";
 import { useState } from "react";
 import { useEffect } from "react";
+import axios from "axios";
+import { GeneralContext } from "../../context/GeneralContext";
 // import "./Login.css"; // same styles
 
 const CreateAccount = ({ switchToLogin }) => {
   const { role, setRole } = useContext(StudentContext);
+  const { backend_url, setLoading, setIsOTP } = useContext(GeneralContext);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -22,10 +25,43 @@ const CreateAccount = ({ switchToLogin }) => {
       role: role,
     }));
   }, [role]);
-  const onSubmitHandler = ()=>{
-    const { name, email, password, role } = formData;
-    
-  }
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const { name, email, password, role } = formData;
+      const response = await axios.post(
+        backend_url + "/api/auth/register",
+        formData
+      );
+      const data = response.data.data;
+      const { token, user } = data;
+      console.log(data);
+
+      if (response.status === 200) {
+        const emailResData = {
+          subject: "Email Verification",
+          token,
+        };
+
+        const emailResponse = await axios.post(
+          backend_url + "/api/mail/send-mail",
+          emailResData
+        );
+        console.log("email", emailResponse);
+
+        if (emailResponse.status === 200) {
+          // localStorage.setItem("token", token);
+          setIsOTP(true);
+        }
+      }
+      console.log(response);
+    } catch (e) {
+      console.log(e);
+    } finally {
+      setLoading(false);
+    }
+  };
   return (
     <div className="login-container min-h-screen flex items-center justify-center md:justify-end bg-gradient-to-br p-6 ">
       <div className="login-card bg-[var(--login-card-bg)] shadow-xl rounded-2xl p-8 w-full max-w-md h-auto page-transition">

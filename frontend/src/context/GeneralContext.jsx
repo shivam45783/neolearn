@@ -6,6 +6,7 @@ export const GeneralContext = createContext();
 const GeneralContextProvider = (props) => {
   const backend_url = "http://localhost:3000";
   const [loading, setLoading] = useState(false);
+  const [isOTP, setIsOTP] = useState(false);
   useEffect(() => {
     if (loading) {
       document.documentElement.classList.add("no-scroll"); // html
@@ -20,6 +21,8 @@ const GeneralContextProvider = (props) => {
     backend_url,
     loading,
     setLoading,
+    isOTP,
+    setIsOTP,
   };
 
   return (

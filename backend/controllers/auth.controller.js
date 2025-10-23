@@ -31,6 +31,9 @@ const registerUser = async (req, res) => {
         status: 409,
       });
     }
+    if (existingUser && existingUser.otp !== null) {
+      await prisma.$queryRaw`DELETE FROM users WHERE email = ${email}`;
+    }
     if (!validator.isEmail(email)) {
       return res.json({
         success: false,
@@ -46,7 +49,7 @@ const registerUser = async (req, res) => {
         status: 400,
       });
     }
-
+   
     const hashedPassword = bcrypt.hashSync(password, 10);
     const user =
       await prisma.$queryRaw`INSERT INTO users (name, email, password, role) VALUES (${name}, ${email}, ${hashedPassword}, ${role})`;

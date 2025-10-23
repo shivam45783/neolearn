@@ -1,13 +1,15 @@
-import React, { useState } from "react";
+import React, { useState, useContext } from "react";
 import LoginVisual from "../../components/LoginVisual/LoginVisual";
 import Login from "../../components/Login/Login";
 import CreateAccount from "../../components/CreateAccount/CreateAccount";
 import { useEffect } from "react";
 import { useLocation } from "react-router-dom";
 import OTPCard from "../../components/OTPCard/OTPCard";
+import { GeneralContext } from "../../context/GeneralContext";
 const Auth = () => {
   const [isLogin, setIsLogin] = useState(true);
-  const [isOTP, setIsOTP] = useState(true);
+  // const [isOTP, setIsOTP] = useState(false);
+  const {isOTP, setIsOTP} = useContext(GeneralContext);
   const location = useLocation();
   useEffect(() => {
     if (location.state?.isLogin == false) setIsLogin(false);
