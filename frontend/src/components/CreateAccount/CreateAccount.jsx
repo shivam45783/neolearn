@@ -35,13 +35,13 @@ const CreateAccount = ({ switchToLogin }) => {
         formData
       );
       const data = response.data.data;
-      const { token, user } = data;
+      const { access_token } = data;
       console.log(data);
 
       if (response.status === 200) {
         const emailResData = {
           subject: "Email Verification",
-          token,
+          token: access_token,
         };
 
         const emailResponse = await axios.post(
@@ -51,7 +51,7 @@ const CreateAccount = ({ switchToLogin }) => {
         console.log("email", emailResponse);
 
         if (emailResponse.status === 200) {
-          // localStorage.setItem("token", token);
+          localStorage.setItem("accessToken", access_token);
           setIsOTP(true);
         }
       }

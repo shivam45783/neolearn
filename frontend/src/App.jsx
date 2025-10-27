@@ -9,6 +9,7 @@ import Loading from "./components/Loading/Loading";
 // import Login from "./pages/Auth/Auth";
 import Auth from "./pages/Auth/Auth";
 import { GeneralContext } from "./context/GeneralContext";
+import Dashboard from "./pages/student/Dashboard/Dashboard";
 
 const BodyClassController = () => {
   const location = useLocation();
@@ -27,7 +28,7 @@ const App = () => {
   const location = useLocation();
   const hideLayout = location.pathname == "/auth";
   const hideThemeToggle = location.pathname == "/auth";
-  const {loading} = useContext(GeneralContext);
+  const { loading } = useContext(GeneralContext);
   return (
     <>
       <Loading isLoading={loading} />
@@ -37,11 +38,9 @@ const App = () => {
       {/* {!hideThemeToggle && <ThemeToggle />} */}
       <div className="app">
         <Routes>
-          <Route
-            path="/"
-            element={<LandingPage />}
-          ></Route>
-          <Route path="/auth" element={<Auth/>}></Route>
+          <Route path="/" element={<LandingPage />}></Route>
+          <Route path="/auth" element={<Auth />}></Route>
+          <Route path="/dashboard" element={<Dashboard />}></Route>
         </Routes>
       </div>
       <div className="footer page-transition">{!hideLayout && <Footer />}</div>

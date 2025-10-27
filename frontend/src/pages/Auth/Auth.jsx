@@ -7,7 +7,7 @@ import { useLocation } from "react-router-dom";
 import OTPCard from "../../components/OTPCard/OTPCard";
 import { GeneralContext } from "../../context/GeneralContext";
 const Auth = () => {
-  const [isLogin, setIsLogin] = useState(true);
+  const {isLogin, setIsLogin} = useContext(GeneralContext);
   // const [isOTP, setIsOTP] = useState(false);
   const {isOTP, setIsOTP} = useContext(GeneralContext);
   const location = useLocation();

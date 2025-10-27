@@ -3,7 +3,7 @@ import bcrypt from "bcrypt";
 import prisma from "../utils/db.js";
 import validator from "validator";
 
-const createToken = (user) => {
+const createAccessToken = (user) => {
   const token = jwt.sign(
     {
       id: user.id,
@@ -17,9 +17,26 @@ const createToken = (user) => {
   );
   return token;
 };
+const createRefreshToken = (user) => {
+  const token = jwt.sign(
+    {
+      id: user.id,
+      email: user.email,
+      role: user.role,
+    },
+    process.env.JWT_SECRET,
+    {
+      expiresIn: "7d",
+    }
+  );
+  return token;
+};
 
 const registerUser = async (req, res) => {
   const { name, email, password, role } = req.body;
+  name.trim();
+  email.trim();
+  password.trim();
 
   try {
     const existingUser =
@@ -49,20 +66,30 @@ const registerUser = async (req, res) => {
         status: 400,
       });
     }
-   
+
     const hashedPassword = bcrypt.hashSync(password, 10);
     const user =
       await prisma.$queryRaw`INSERT INTO users (name, email, password, role) VALUES (${name}, ${email}, ${hashedPassword}, ${role})`;
 
-    const userCreated = await prisma.$queryRaw`SELECT * FROM users WHERE email = ${email}`;
-    const token = createToken(userCreated[0]);
+    const userCreated =
+      await prisma.$queryRaw`SELECT * FROM users WHERE email = ${email}`;
+    const access_token = createAccessToken(userCreated[0]);
+    const refresh_token = createRefreshToken(userCreated[0]);
+    await prisma.$queryRaw`UPDATE users SET refresh_token = ${refresh_token} WHERE email = ${email}`;
     console.log("user", userCreated[0]);
-    
+    // res.cookie("access_token", access_token, {
+    //   httpOnly: true,
+    //   maxAge: 24 * 60 * 60 * 1000,
+    // });
+    res.cookie("refresh_token", refresh_token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
     return res.json({
       success: true,
       message: "User registered successfully",
       status: 201,
-      data: { user: userCreated[0], token },
+      data: { user: userCreated[0], access_token, refresh_token },
     });
   } catch (e) {
     console.log(JSON.stringify(e, null, 2));
@@ -74,4 +101,68 @@ const registerUser = async (req, res) => {
   }
 };
 
-export { registerUser };
+const verifyOTP = async (req, res) => {
+  const { token, otp } = req.body;
+  const decoded = jwt.verify(token, process.env.JWT_SECRET);
+  const email = decoded.email;
+  const storedOTP =
+    await prisma.$queryRaw`SELECT otp FROM users WHERE email = ${email}`;
+  if (storedOTP[0].otp !== otp) {
+    return res.json({
+      success: false,
+      message: "Invalid OTP",
+      status: 400,
+    });
+  }
+  await prisma.$queryRaw`UPDATE users SET otp = null WHERE email = ${email} AND isEmailVerified = true`;
+
+  return res.json({
+    success: true,
+    message: "OTP verified successfully",
+    status: 200,
+  });
+};
+
+const getUser = async (req, res) => {
+  const userId = req.body.userId;
+  if (!userId) {
+    return res.status(401).json({ message: "No user id provided in get user" });
+  }
+  const result =
+    await prisma.$queryRaw`SELECT * FROM users WHERE id = ${userId}`;
+  const user = result[0];
+  return res.json({
+    success: true,
+    message: "User fetched successfully",
+    status: 200,
+    data: user,
+  });
+};
+
+const getFreshTokens = async (req, res) => {
+  const refreshToken = req.cookies.refresh_token;
+  if (!refreshToken) {
+    return res.status(403).json({ message: "No refresh token provided" });
+  }
+  try {
+    const decoded = jwt.verify(refreshToken, process.env.JWT_SECRET);
+    const userId = decoded.id;
+    const result =
+      await prisma.$queryRaw`SELECT * FROM users WHERE id = ${userId}`;
+    const user = result[0];
+    const access_token = createAccessToken(user);
+    const refresh_token = createRefreshToken(user);
+    await prisma.$queryRaw`UPDATE users SET refresh_token = ${refresh_token} WHERE id = ${userId}`;
+
+    res.cookie("refresh_token", refresh_token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000,
+    });
+    return res.status(200).json({
+      success: true,
+      message: "Tokens refreshed successfully",
+      data: { user, access_token, refresh_token },
+    });
+  } catch (e) {}
+};
+export { registerUser, verifyOTP, getUser, getFreshTokens };
