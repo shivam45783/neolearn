@@ -1,7 +1,8 @@
-import React from "react";
+import React, { useContext } from "react";
 import { assets } from "../../assets/assets";
 import "./Navbar.css";
 import { useNavigate } from "react-router-dom";
+import { GeneralContext } from "../../context/GeneralContext";
 const Navbar = () => {
   const navigate = useNavigate();
   const navigateAuth = (mode) => {
@@ -26,7 +27,12 @@ const Navbar = () => {
             // href="#"
             className="cursor-pointer hover:underline  before:content-['|'] before:mx-2"
           >
-            <span className="hover:text-[#005EF6]">Teach on NeoLearn</span>
+            <span
+              className="hover:text-[#005EF6]"
+             
+            >
+              Teach on NeoLearn
+            </span>
           </a>
           <a
             // href=""

@@ -53,13 +53,13 @@ const Carousel = ({ slides, autoScroll = true, interval = 4000 }) => {
       {/* Navigation Controls */}
       <button
         onClick={prevSlide}
-        className="absolute top-1/2 left-2 sm:left-3 transform -translate-y-1/2 bg-white/80 hover:bg-white p-1.5 sm:p-2 rounded-full shadow-md"
+        className="absolute top-1/2 left-2 sm:left-3 transform -translate-y-1/2 bg-white/80 hover:bg-white p-1.5 sm:p-2 rounded-full shadow-md cursor-pointer"
       >
         <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
       </button>
       <button
         onClick={nextSlide}
-        className="absolute top-1/2 right-2 sm:right-3 transform -translate-y-1/2 bg-white/80 hover:bg-white p-1.5 sm:p-2 rounded-full shadow-md"
+        className="absolute top-1/2 right-2 sm:right-3 transform -translate-y-1/2 bg-white/80 hover:bg-white p-1.5 sm:p-2 rounded-full shadow-md cursor-pointer"
       >
         <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
       </button>
@@ -70,7 +70,7 @@ const Carousel = ({ slides, autoScroll = true, interval = 4000 }) => {
           <button
             key={i}
             onClick={() => setCurrent(i)}
-            className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition ${
+            className={`w-2.5 h-2.5 sm:w-3 sm:h-3 rounded-full transition cursor-pointer ${
               i === current ? "bg-white" : "bg-gray-400/70"
             }`}
           />

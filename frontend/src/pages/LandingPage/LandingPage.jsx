@@ -55,7 +55,7 @@ const LandingPage = () => {
 
   return (
     <>
-      <div className="page-transition">
+      <div className="page-transition ">
         <Header />
         <div className="flex justify-center">
           <Companies />

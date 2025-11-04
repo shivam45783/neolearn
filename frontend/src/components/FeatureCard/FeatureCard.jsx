@@ -4,7 +4,7 @@ import { Star } from "lucide-react";
 const FeatureCard = ({ image, title, rating, hours }) => {
   return (
     <div
-      className="max-w-sm rounded-2xl overflow-hidden shadow-xl backdrop-blur-xl backdrop-saturate-150 p-4"
+      className="max-w-sm rounded-2xl overflow-hidden shadow-md backdrop-blur-xl backdrop-saturate-100 p-4"
       style={{
         background: "var(--feature-card-bg)",
         border: "1px solid var(--feature-card-border)",

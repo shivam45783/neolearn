@@ -5,11 +5,13 @@ import { useState } from "react";
 import { useEffect } from "react";
 import axios from "axios";
 import { GeneralContext } from "../../context/GeneralContext";
+import toast from "react-hot-toast";
 // import "./Login.css"; // same styles
 
 const CreateAccount = ({ switchToLogin }) => {
   const { role, setRole } = useContext(StudentContext);
-  const { backend_url, setLoading, setIsOTP } = useContext(GeneralContext);
+  const { backend_url, setLoading, setIsOTP, errorToast, successToast } =
+    useContext(GeneralContext);
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -51,6 +53,7 @@ const CreateAccount = ({ switchToLogin }) => {
         console.log("email", emailResponse);
 
         if (emailResponse.status === 200) {
+          localStorage.setItem("otp_expiry", emailResponse.data.data.expiresAt);
           localStorage.setItem("accessToken", access_token);
           setIsOTP(true);
         }
@@ -58,6 +61,17 @@ const CreateAccount = ({ switchToLogin }) => {
       console.log(response);
     } catch (e) {
       console.log(e);
+      if (e.response && e.response.status === 409) {
+        // user already exists
+        errorToast(e.response.data.message);
+        setFormData({ name: "", email: "", password: "", role: role });
+      } else if (e.response && e.response.status === 400) {
+        // password less than 8
+        errorToast(e.response.data.message);
+      } else if (e.response && e.response.status === 500) {
+        // internal server error
+        errorToast(e.response.data.message);
+      }
     } finally {
       setLoading(false);
     }
@@ -97,6 +111,7 @@ const CreateAccount = ({ switchToLogin }) => {
             </label>
             <input
               type="text"
+              value={formData.name}
               placeholder="Enter your name"
               className="w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
               onChange={(e) => {
@@ -114,6 +129,7 @@ const CreateAccount = ({ switchToLogin }) => {
             </label>
             <input
               type="email"
+              value={formData.email}
               placeholder="Enter your email"
               className="w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
               onChange={(e) => {
@@ -131,6 +147,7 @@ const CreateAccount = ({ switchToLogin }) => {
             </label>
             <input
               type="password"
+              value={formData.password}
               placeholder="Enter your password"
               className="w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
               onChange={(e) => {

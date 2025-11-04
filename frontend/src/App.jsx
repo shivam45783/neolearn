@@ -10,7 +10,7 @@ import Loading from "./components/Loading/Loading";
 import Auth from "./pages/Auth/Auth";
 import { GeneralContext } from "./context/GeneralContext";
 import Dashboard from "./pages/student/Dashboard/Dashboard";
-
+import toast, { ToastBar, Toaster } from "react-hot-toast";
 const BodyClassController = () => {
   const location = useLocation();
   if (location.pathname === "/") {
@@ -31,6 +31,7 @@ const App = () => {
   const { loading } = useContext(GeneralContext);
   return (
     <>
+      <Toaster />
       <Loading isLoading={loading} />
       <BodyClassController />
       <div className="navbar page-transition">{!hideLayout && <Navbar />}</div>

@@ -15,6 +15,7 @@ const Auth = () => {
     if (location.state?.isLogin == false) setIsLogin(false);
     else setIsLogin(true);
   }, [location.state]);
+  useEffect(()=>{})
   return (
     <div className="min-w-screen page-transition justify-center md:justify-between items-center flex ">
       <div className="auth-visuals w-[30%] md:flex hidden ">

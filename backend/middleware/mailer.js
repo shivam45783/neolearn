@@ -22,7 +22,9 @@ const sendMail = async (req, res) => {
   }
 
   const otp = generateOTP();
-  await prisma.$queryRaw`UPDATE users SET otp = ${otp} WHERE email = ${email}`;
+  await prisma.$queryRaw`UPDATE users SET otp = ${otp}, otp_expiry_time = CURRENT_TIMESTAMP + INTERVAL 5 MINUTE WHERE email = ${email};
+`;
+
   const transporter = nodemailer.createTransport({
     service: "gmail",
     auth: {
@@ -112,9 +114,13 @@ const sendMail = async (req, res) => {
       } else {
         console.log("Email sent: " + info.response);
         // await prisma.$queryRaw`UPDATE users SET isEmailVerified = true WHERE email = ${email}`;
+        const expiresAt = new Date(Date.now() + 5 * 60 * 1000);
         res.status(200).json({
           success: true,
           message: "Email sent successfully",
+          data: {
+            expiresAt,
+          },
         });
       }
     });

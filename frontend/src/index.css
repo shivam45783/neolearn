@@ -5,7 +5,9 @@
 
 @custom-variant dark (&:is(.dark *));
 :root {
-  --landing-page-gradient: linear-gradient(170deg, #b6e9ff, #ffffff);
+  --landing-page-gradient: linear-gradient(170deg, #def5ff, #ffffff);
+  --toast-error-color: #ffdadab0;
+  --toast-success-color: #93ff938f;
   --auth-page-gradient: linear-gradient(170deg, #92deffe4, #ffffffe1);
   --navlinks-color: #575757;
   --navbar-heading: #000;
@@ -70,6 +72,8 @@
   #12181B 0%,     
   #12181B 50%,    
   #1f2937 100%  );
+  --toast-error-color: #6c0000cc;
+  --toast-success-color: #0056008f;
   --auth-page-gradient: linear-gradient( 300deg,
   #12181bed 0%,     
   #12181bea 50%,    
@@ -152,6 +156,17 @@ html {
   /* background-color: var(--landing-page-color); */
 
 }
+.disable-selection {
+  user-select: none;       
+  -webkit-user-select: none; 
+  -moz-user-select: none;    
+  -ms-user-select: none;    
+}
+.disable-image-drag {
+  -moz-user-drag: none;          
+  -webkit-user-drag: none;   
+  pointer-events: none;     
+}
 .auth-page {
   /* background: var(--auth-page-gradient); */
   
@@ -192,7 +207,13 @@ body.no-scroll {
   overflow: hidden;
   height: 100%; 
 }
-
+.toast_error {
+  /* background: var(--landing-page-gradient); */
+  background-color: var(--toast-error-color);
+}
+.toast_success {
+  background-color: var(--toast-success-color);
+}
 @theme inline {
   --radius-sm: calc(var(--radius) - 4px);
   --radius-md: calc(var(--radius) - 2px);
@@ -238,4 +259,67 @@ body.no-scroll {
   body {
     @apply bg-background text-foreground;
   }
+}
+
+@keyframes slideIn {
+  from {
+    transform: translateX(150%);
+    opacity: 0;
+  }
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+@keyframes slideOut {
+  from {
+    transform: translateX(0);
+    opacity: 1;
+  }
+  to {
+    transform: translateX(150%);
+    opacity: 0;
+  }
+}
+
+.animate-slideIn {
+  animation: slideIn 0.3s ease-out forwards;
+}
+
+.animate-slideOut {
+  animation: slideOut 0.3s ease-in forwards;
+}
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    scale:0.3;
+    transform: translateY(-100px);
+  }
+  to {
+    opacity: 1;
+    scale: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes slideOut {
+  from {
+    opacity: 1;
+    scale: 1;
+    transform: translateY(0);
+  }
+  to {
+    opacity: 0;
+    scale: 0.3;
+    transform: translateY(-100px);
+  }
+}
+
+.animate-enter {
+  animation: slideIn 0.2s ease-out forwards;
+}
+
+.animate-leave {
+  animation: slideOut 0.2s ease-in forwards;
 }

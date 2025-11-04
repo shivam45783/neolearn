@@ -41,8 +41,8 @@ const registerUser = async (req, res) => {
   try {
     const existingUser =
       await prisma.$queryRaw`SELECT * FROM users WHERE email = ${email}`;
-    if (existingUser && existingUser.otp === null) {
-      return res.json({
+    if (existingUser.length && existingUser[0].otp === null) {
+      return res.status(409).json({
         success: false,
         message: "User already exists",
         status: 409,
@@ -60,7 +60,7 @@ const registerUser = async (req, res) => {
     }
 
     if (password.length < 8) {
-      return res.json({
+      return res.status(400).json({
         success: false,
         message: "Password must be at least 8 characters",
         status: 400,
@@ -102,25 +102,66 @@ const registerUser = async (req, res) => {
 };
 
 const verifyOTP = async (req, res) => {
-  const { token, otp } = req.body;
-  const decoded = jwt.verify(token, process.env.JWT_SECRET);
-  const email = decoded.email;
-  const storedOTP =
-    await prisma.$queryRaw`SELECT otp FROM users WHERE email = ${email}`;
-  if (storedOTP[0].otp !== otp) {
-    return res.json({
+  try {
+    const { token, otp } = req.body;
+    const decoded = jwt.verify(token, process.env.JWT_SECRET);
+    const email = decoded.email;
+
+    const storedOTP = await prisma.$queryRaw`
+      SELECT otp, otp_expiry_time FROM users WHERE email = ${email}
+    `;
+    // console.log(storedOTP[0]);
+    
+    if (!storedOTP.length) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found",
+        status: 404,
+      });
+    }
+    const now = new Date();
+    if (new Date(storedOTP[0].otp_expiry_time) < now) {
+      await prisma.$queryRaw`
+        UPDATE users 
+        SET otp = null, isEmailVerified = false 
+        WHERE email = ${email}
+      `;
+      return res.status(401).json({
+        success: false,
+        message: "OTP has expired",
+        status: 401,
+      });
+    }
+
+    if (storedOTP[0].otp !== otp) {
+      return res.status(400).json({
+        success: false,
+        message: "Invalid OTP",
+        status: 400,
+      });
+    }
+
+    await prisma.$queryRaw`
+      UPDATE users 
+      SET otp = null, isEmailVerified = true 
+      WHERE email = ${email}
+    `;
+    const data =
+      await prisma.$queryRaw`SELECT * FROM users WHERE email = ${email}`;
+    return res.status(200).json({
+      success: true,
+      message: "OTP verified successfully",
+      status: 200,
+      data: data[0],
+    });
+  } catch (e) {
+    console.log("Error verifying OTP:", e);
+    return res.status(500).json({
       success: false,
-      message: "Invalid OTP",
-      status: 400,
+      message: "Something went wrong during OTP verification",
+      status: 500,
     });
   }
-  await prisma.$queryRaw`UPDATE users SET otp = null WHERE email = ${email} AND isEmailVerified = true`;
-
-  return res.json({
-    success: true,
-    message: "OTP verified successfully",
-    status: 200,
-  });
 };
 
 const getUser = async (req, res) => {

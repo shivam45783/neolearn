@@ -6,16 +6,16 @@ import {
   InputOTPSlot,
 } from "../ui/input-otp";
 import { OTPInputContext } from "input-otp";
-import React, { useContext, useState } from "react";
+import React, { useContext, useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import axios from "axios";
 import { GeneralContext } from "../../context/GeneralContext";
 
-
 const OTPCard = () => {
   const [otp, setOTP] = useState("");
   const navigate = useNavigate();
-  const {backend_url, setUserData} = useContext(GeneralContext);
+  const { backend_url, setUserData, errorToast, successToast, setIsOTP } =
+    useContext(GeneralContext);
   const verifyOTP = async () => {
     try {
       const accessToken = localStorage.getItem("accessToken");
@@ -24,14 +24,55 @@ const OTPCard = () => {
         otp,
       });
       if (response.status === 200) {
-        console.log(response.data.message);
-        setUserData(response.data.data);
-        navigate("/dashboard");
+        successToast(response.data.message);
+        console.log("OTP res", response.data.message);
+        console.log("user data from otp", response.data.data);
+        await setUserData(response.data.data);
+        setIsOTP(false);
+        localStorage.removeItem("otp_expiry");
+        setTimeout(() => navigate("/dashboard"), 0);
+        // navigate("/dashboard");
       }
     } catch (e) {
       console.log(e);
+      if (
+        (e.response &&
+          (e.response.status === 404 || e.response.status === 400)) ||
+        e.response.status === 500 || e.response.status === 401
+      ) {
+        errorToast(e.response.data.message);
+      } else {
+        console.log(e.message);
+
+        // errorToast(e.message);
+      }
     }
   };
+  const [timeLeft, setTimeLeft] = useState(0);
+
+  useEffect(() => {
+    const expiry = localStorage.getItem("otp_expiry");
+    if (!expiry) return;
+
+    const expiryTime = new Date(expiry).getTime();
+
+    const updateTimer = () => {
+      const now = Date.now();
+      const diff = expiryTime - now;
+      setTimeLeft(diff > 0 ? Math.floor(diff / 1000) : 0);
+    };
+
+    updateTimer(); 
+    const interval = setInterval(updateTimer, 1000);
+
+    return () => clearInterval(interval);
+  }, []);
+  const formatTime = (seconds) => {
+    const m = Math.floor(seconds / 60);
+    const s = seconds % 60;
+    return `${m}:${s.toString().padStart(2, "0")}`;
+  };
+
   return (
     <div className="otp-container min-h-screen flex items-center justify-center md:justify-end bg-gradient-to-br p-6 ">
       <div className="otp-card bg-[var(--login-card-bg)] shadow-xl rounded-2xl p-8 w-full max-w-md h-auto page-transition">
@@ -67,6 +108,19 @@ const OTPCard = () => {
             Verify
           </button>
         </div>
+        <div className="text-center mt-3">
+          {timeLeft > 0 ? (
+            <p className="text-sm text-gray-500">
+              OTP expires in{" "}
+              <span className="font-semibold text-blue-600">
+                {formatTime(timeLeft)}
+              </span>
+            </p>
+          ) : (
+            <p className="text-sm text-red-500 font-medium">OTP expired</p>
+          )}
+        </div>
+
         <div className="otp-resend flex items-center justify-center mt-5    ">
           <p className="text-[var(--header-bottom-text)] text-sm font-normal">
             Didn't receive the otp?{" "}

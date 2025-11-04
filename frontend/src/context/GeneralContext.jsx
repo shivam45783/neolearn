@@ -3,16 +3,19 @@ import { useEffect } from "react";
 import axios from "axios";
 import { useAnimate } from "framer-motion";
 import { useNavigate } from "react-router-dom";
-
+import toast from "react-hot-toast";
+import { assets } from "../assets/assets.js";
 export const GeneralContext = createContext();
 
 const GeneralContextProvider = (props) => {
   const backend_url = "http://localhost:3000";
   const [loading, setLoading] = useState(false);
   const [isOTP, setIsOTP] = useState(false);
-  const [userData, setUserData] = useState({});
+  const [userData, setUserData] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
+
   const navigate = useNavigate();
+
   useEffect(() => {
     if (loading) {
       document.documentElement.classList.add("no-scroll"); // html
@@ -80,7 +83,52 @@ const GeneralContextProvider = (props) => {
       }
     }
   };
-
+  const errorToast = (message) => {
+    toast.custom(
+      (t) => (
+        <div
+          className={`toast_error px-4 py-3 rounded-xl shadow-lg flex
+      ${t.visible ? "animate-enter" : "animate-leave"}`}
+        >
+          <div className="flex items-center gap-2">
+            {/* <span className="text-red-600 text-xl">❌</span> */}
+            <img
+              src={assets.logo_red}
+              alt=""
+              className="w-[26px] disable-image-drag"
+            />
+            <p className="font-medium disable-selection">{message}</p>
+          </div>
+        </div>
+      ),
+      {
+        duration: 3000,
+      }
+    );
+  };
+  const successToast = (message) => {
+    toast.custom(
+      (t) => (
+        <div
+          className={`toast_success px-4 py-3 rounded-xl shadow-lg flex 
+      ${t.visible ? "animate-enter" : "animate-leave"}`}
+        >
+          <div className="flex items-center gap-2">
+            {/* <span className="text-red-600 text-xl">❌</span> */}
+            <img
+              src={assets.logo_green}
+              alt=""
+              className="w-[26px] disable-image-drag"
+            />
+            <p className="font-medium disable-selection">{message}</p>
+          </div>
+        </div>
+      ),
+      {
+        duration: 3000,
+      }
+    );
+  };
   useEffect(() => {
     async function loadData() {
       // if (!localStorage.getItem("accessToken")) return;
@@ -99,6 +147,8 @@ const GeneralContextProvider = (props) => {
     setUserData,
     isLogin,
     setIsLogin,
+    errorToast,
+    successToast,
   };
 
   return (
