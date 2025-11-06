@@ -101,6 +101,63 @@ const registerUser = async (req, res) => {
   }
 };
 
+const loginUser = async (req, res) => {
+  try {
+    const { email, passsword } = req.body;
+
+    const userResult =
+      await prisma.$queryRaw`SELECT * FROM users WHERE email = ${email}`;
+    if (userResult.length === 0) {
+      return res.status(404).json({
+        success: false,
+        message: "User not found, verify your email",
+        status: 404,
+      });
+    }
+    const user = userResult[0];
+    if (!user.isEmailVerified) {
+      return res.status(403).json({
+        success: false,
+        message: "User is not verified",
+        status: 403,
+      });
+    }
+    const hashedPassword = user.passsword;
+    const isPasswordValid = bcrypt.compareSync(passsword, hashedPassword);
+    if (!isPasswordValid) {
+      return res.status(401).json({
+        success: false,
+        message: "Invalid password",
+        status: 401,
+      });
+    }
+    const access_token = createAccessToken(user);
+    const refresh_token = createRefreshToken(user);
+    await prisma.$queryRaw`
+      UPDATE users SET refresh_token = ${refresh_token} WHERE email = ${email}
+    `;
+    res.cookie("refresh_token", refresh_token, {
+      httpOnly: true,
+      maxAge: 7 * 24 * 60 * 60 * 1000, // 7 days
+    });
+
+    return res.json({
+      success: true,
+      message: "User logged in successfully",
+      status: 200,
+      data: { user, access_token, refresh_token },
+    });
+  } catch (error) {
+    console.error("Login Error:", error);
+    return res.status(500).json({
+      success: false,
+      message: "Something went wrong on server",
+      status: 500,
+      error: error.message,
+    });
+  }
+};
+
 const verifyOTP = async (req, res) => {
   try {
     const { token, otp } = req.body;
@@ -111,7 +168,7 @@ const verifyOTP = async (req, res) => {
       SELECT otp, otp_expiry_time FROM users WHERE email = ${email}
     `;
     // console.log(storedOTP[0]);
-    
+
     if (!storedOTP.length) {
       return res.status(404).json({
         success: false,
@@ -206,4 +263,4 @@ const getFreshTokens = async (req, res) => {
     });
   } catch (e) {}
 };
-export { registerUser, verifyOTP, getUser, getFreshTokens };
+export { registerUser, verifyOTP, getUser, getFreshTokens, loginUser };

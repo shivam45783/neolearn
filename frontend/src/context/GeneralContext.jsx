@@ -13,7 +13,7 @@ const GeneralContextProvider = (props) => {
   const [isOTP, setIsOTP] = useState(false);
   const [userData, setUserData] = useState(null);
   const [isLogin, setIsLogin] = useState(true);
-
+  const [themeImages, setThemeImages] = useState({});
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -27,7 +27,8 @@ const GeneralContextProvider = (props) => {
   }, [loading]);
   const getUser = async (token) => {
     console.log("token", token);
-
+    const hasLoggedInBefore =
+      localStorage.getItem("hasLoggedInBefore") === "true";
     if (token === null) {
       try {
         const refreshResponse = await axios.get(
@@ -42,11 +43,12 @@ const GeneralContextProvider = (props) => {
         }
       } catch (e) {
         if (e.response && e.response.status === 403) {
-          setIsLogin(true);
-          navigate("/auth");
+          if (hasLoggedInBefore) {
+            setIsLogin(true);
+            navigate("/auth");
+          }
         }
       }
-      console.log("I am here");
 
       return;
     }
@@ -56,6 +58,7 @@ const GeneralContextProvider = (props) => {
       });
 
       if (userResponse.status === 200) {
+        localStorage.setItem("hasLoggedInBefore", "true");
         setUserData(userResponse.data.data);
         console.log("✅ userData:", userResponse.data.data);
       }
@@ -72,11 +75,16 @@ const GeneralContextProvider = (props) => {
               "accessToken",
               refreshResponse.data.data.access_token
             );
-            // Retry getUser with new token
+
             await getUser(refreshResponse.data.data.access_token);
           }
         } catch (refreshErr) {
-          console.log("❌ Refresh failed:", refreshErr);
+          if (refreshErr.response && refreshErr.response.status === 403) {
+            if (hasLoggedInBefore) {
+              setIsLogin(true);
+              navigate("/auth");
+            }
+          }
         }
       } else {
         console.log("❌ Error in getUser:", e);
@@ -138,6 +146,7 @@ const GeneralContextProvider = (props) => {
     loadData();
   }, []);
   const contextValue = {
+    getUser,
     backend_url,
     loading,
     setLoading,
@@ -149,6 +158,8 @@ const GeneralContextProvider = (props) => {
     setIsLogin,
     errorToast,
     successToast,
+    themeImages,
+    setThemeImages,
   };
 
   return (

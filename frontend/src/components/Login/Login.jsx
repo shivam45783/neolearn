@@ -1,13 +1,54 @@
-import React, { use, useContext } from "react";
+import React, { use, useContext, useEffect, useState } from "react";
 import { StudentContext } from "../../context/StudentContext";
 import { assets } from "../../assets/assets";
 import "./Login.css";
 import axios from "axios";
 import { GeneralContext } from "../../context/GeneralContext";
+import { useNavigate } from "react-router-dom";
 
 const Login = ({ switchToSignup }) => {
+  const navigate = useNavigate();
   const { role, setRole } = useContext(StudentContext);
-  const { backend_url, setLoading } = useContext(GeneralContext);
+  const { backend_url, setLoading, getUser, themeImages } = useContext(GeneralContext);
+  const [formData, setFormData] = useState({
+    email: "",
+    password: "",
+    role: role,
+  });
+  useEffect(() => {
+    console.log(formData);
+  }, [formData]);
+  useEffect(() => {
+    setFormData((prev) => ({
+      ...prev,
+      role: role,
+    }));
+  }, [role]);
+  const [showPass, setShowPass] = useState(false);
+
+  const onSubmitHandler = async (e) => {
+    e.preventDefault();
+    try {
+      setLoading(true);
+      const { email, password, role } = formData;
+      const response = await axios.post(
+        backend_url + "/api/auth/login",
+        formData
+      );
+      const data = response.data.data;
+
+      console.log(data);
+      if (response.status === 200) {
+        const { access_token } = data;
+        localStorage.setItem("accessToken", access_token);
+        localStorage.setItem("role", role);
+        await getUser(access_token);
+        setTimeout(() => navigate("/dashboard"), 0);
+      }
+    } catch (e) {
+      console.log(e);
+    }
+  };
   return (
     <div className="login-container min-h-screen flex items-center justify-center md:justify-end bg-gradient-to-br p-6">
       <div className="login-card bg-[var(--login-card-bg)] shadow-xl rounded-2xl p-8 w-full max-w-md h-auto page-transition flex flex-col">
@@ -36,7 +77,7 @@ const Login = ({ switchToSignup }) => {
         </div>
 
         {/* Login Form */}
-        <form className="space-y-4">
+        <form className="space-y-4" onSubmit={onSubmitHandler}>
           <div>
             <label className="block text-[var(--header-bottom-text)] text-sm mb-1 font-medium">
               Email
@@ -45,6 +86,10 @@ const Login = ({ switchToSignup }) => {
               type="email"
               placeholder="Enter your email"
               className="email-textbox w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
+              value={formData.email}
+              onChange={(e) =>
+                setFormData({ ...formData, email: e.target.value })
+              }
             />
           </div>
 
@@ -52,11 +97,28 @@ const Login = ({ switchToSignup }) => {
             <label className="block text-sm mb-1 text-[var(--header-bottom-text)] font-medium">
               Password
             </label>
-            <input
-              type="password"
-              placeholder="Enter your password"
-              className="password-textbox w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
-            />
+
+            <div className="relative">
+              <input
+                type={showPass ? "text" : "password"}
+                value={formData.password}
+                placeholder="Enter your password"
+                className="w-full border border-[var(--login-border-color)] rounded-lg px-3 py-2 pr-10 focus:ring-2 focus:ring-blue-500 focus:outline-none text-[var(--header-bottom-text)]"
+                onChange={(e) => {
+                  setFormData({
+                    ...formData,
+                    password: e.target.value,
+                  });
+                }}
+              />
+
+              <img
+                src={showPass ? themeImages.view : themeImages.hide}
+                alt="toggle visibility"
+                className="absolute right-3 top-1/2 -translate-y-1/2 w-5 h-5 cursor-pointer"
+                onClick={() => setShowPass(!showPass)}
+              />
+            </div>
           </div>
 
           <button
@@ -76,7 +138,6 @@ const Login = ({ switchToSignup }) => {
             Sign up
           </span>
         </p>
-        
       </div>
     </div>
   );

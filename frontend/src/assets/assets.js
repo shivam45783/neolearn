@@ -16,6 +16,11 @@ import featured_course_3 from "./featured_course_3.jpg";
 import auth_visual_1 from "./auth_visual_1.svg";
 import logo_red from "./logo_red.png";
 import logo_green from "./logo_green.png";
+import view_light from "./view_light.png";
+import hide_light from "./hide_light.png";
+import view_dark from "./view_dark.png";
+import hide_dark from "./hide_dark.png";
+
 export const assets = {
   logo,
   line_sketch,
@@ -35,4 +40,8 @@ export const assets = {
   auth_visual_1,
   logo_red,
   logo_green,
+  view_light,
+  hide_light,
+  view_dark,
+  hide_dark,
 };

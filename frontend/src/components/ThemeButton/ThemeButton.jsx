@@ -1,16 +1,32 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Sun, Moon, Monitor } from "lucide-react";
-
+import { assets } from "../../assets/assets.js";
+import { GeneralContext } from "../../context/GeneralContext.jsx";
 function ThemeToggle() {
   const themes = ["system", "light", "dark"];
   const [theme, setTheme] = useState("system");
-
+  // const [themeImages, setThemeImages] = useState({});
+  const {themeImages, setThemeImages} = useContext(GeneralContext);
   useEffect(() => {
     const savedTheme = localStorage.getItem("theme") || "system";
     setTheme(savedTheme);
     applyTheme(savedTheme);
+    setThemeImages(useThemedImages(savedTheme));
   }, []);
+  const useThemedImages = (theme) => {
+    const images = {
+      light: {
+        view: assets.view_light,
+        hide: assets.hide_light,
+      },
+      dark: {
+        view: assets.view_dark,
+        hide: assets.hide_dark,
+      },
+    };
 
+    return images[theme];
+  };
   const applyTheme = (theme) => {
     if (theme === "dark") {
       document.documentElement.classList.add("dark");
@@ -28,6 +44,7 @@ function ThemeToggle() {
     setTheme(nextTheme);
     localStorage.setItem("theme", nextTheme);
     applyTheme(nextTheme);
+    setThemeImages(useThemedImages(nextTheme));
   };
 
   // Cycle between light/dark/system

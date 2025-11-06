@@ -1,3 +1,5 @@
 DELETE FROM users WHERE id > 0;
+
 SELECT * FROM users;
+
 TRUNCATE TABLE users;

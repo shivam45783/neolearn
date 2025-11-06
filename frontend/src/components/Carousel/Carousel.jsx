@@ -55,13 +55,13 @@ const Carousel = ({ slides, autoScroll = true, interval = 4000 }) => {
         onClick={prevSlide}
         className="absolute top-1/2 left-2 sm:left-3 transform -translate-y-1/2 bg-white/80 hover:bg-white p-1.5 sm:p-2 rounded-full shadow-md cursor-pointer"
       >
-        <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5" />
+        <ChevronLeft className="w-4 h-4 sm:w-5 sm:h-5 text-[#000000]" />
       </button>
       <button
         onClick={nextSlide}
         className="absolute top-1/2 right-2 sm:right-3 transform -translate-y-1/2 bg-white/80 hover:bg-white p-1.5 sm:p-2 rounded-full shadow-md cursor-pointer"
       >
-        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5" />
+        <ChevronRight className="w-4 h-4 sm:w-5 sm:h-5 text-[#000000]" />
       </button>
 
       {/* Dots */}
