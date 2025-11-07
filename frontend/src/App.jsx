@@ -11,6 +11,7 @@ import Auth from "./pages/Auth/Auth";
 import { GeneralContext } from "./context/GeneralContext";
 import Dashboard from "./pages/student/Dashboard/Dashboard";
 import toast, { ToastBar, Toaster } from "react-hot-toast";
+import ProtectedRoute from "./components/ProtectedRoute/ProtectedRoute";
 const BodyClassController = () => {
   const location = useLocation();
   if (location.pathname === "/") {
@@ -35,16 +36,23 @@ const App = () => {
       <Loading isLoading={loading} />
       <BodyClassController />
       <div className="navbar page-transition">{!hideLayout && <Navbar />}</div>
-      <ThemeToggle />
+      {/* <ThemeToggle /> */}
       {/* {!hideThemeToggle && <ThemeToggle />} */}
       <div className="app">
         <Routes>
           <Route path="/" element={<LandingPage />}></Route>
           <Route path="/auth" element={<Auth />}></Route>
-          <Route path="/dashboard" element={<Dashboard />}></Route>
+          <Route
+            path="/dashboard"
+            element={
+              <ProtectedRoute>
+                <Dashboard />
+              </ProtectedRoute>
+            }
+          />
         </Routes>
       </div>
-      <div className="footer page-transition">{!hideLayout && <Footer />}</div>
+      {/* <div className="footer page-transition">{!hideLayout && <Footer />}</div> */}
     </>
   );
 };

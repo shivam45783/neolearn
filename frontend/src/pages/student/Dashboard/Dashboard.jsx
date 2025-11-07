@@ -25,7 +25,7 @@ const Dashboard = () => {
   return (
     userData && (
       <>
-        <div onClick={() => toastify}>{userData?.name}</div>
+        <div className="mb-10">{userData?.name}</div>
       </>
     )
   );

@@ -65,6 +65,8 @@
   --sidebar-border: oklch(0.922 0 0);
   --sidebar-ring: oklch(0.708 0 0);
   --otp-border: #5e5e5e81;
+  --dropdown_menu_hover: #212121;
+  --profile_menu_bg: #454040;
 }
 
 .dark {
@@ -136,6 +138,11 @@
   --sidebar-border: oklch(1 0 0 / 10%);
   --sidebar-ring: oklch(0.556 0 0);
   --otp-border: #d2d2d244;
+  --dropdown_menu_hover: #212121;
+  --dropdown_menu_items_bg: #4c4c4c5f;
+  --dropdown_menu_items_hover_bg: #50525b;
+  --dropdown_menu_items_border: #8b8b8b5f;
+  --logout_button_hover: #e11d47d4;
 }
 * {
   /* padding: 0;
@@ -322,4 +329,8 @@ body.no-scroll {
 
 .animate-leave {
   animation: slideOut 0.2s ease-in forwards;
+}
+
+.dropdown_hover_menu {
+  background-color: var(--dropdown_menu_hover);
 }

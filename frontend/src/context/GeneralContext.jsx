@@ -26,32 +26,24 @@ const GeneralContextProvider = (props) => {
     }
   }, [loading]);
   const getUser = async (token) => {
-    console.log("token", token);
     const hasLoggedInBefore =
       localStorage.getItem("hasLoggedInBefore") === "true";
-    if (token === null) {
+
+    if (!token) {
       try {
         const refreshResponse = await axios.get(
           backend_url + "/api/auth/refresh"
         );
-        if (refreshResponse.status == 200) {
-          localStorage.setItem(
-            "accessToken",
-            refreshResponse.data.data.access_token
-          );
-          await getUser(refreshResponse.data.data.access_token);
-        }
-      } catch (e) {
-        if (e.response && e.response.status === 403) {
-          if (hasLoggedInBefore) {
-            setIsLogin(true);
-            navigate("/auth");
-          }
-        }
+        localStorage.setItem(
+          "accessToken",
+          refreshResponse.data.data.access_token
+        );
+        return await getUser(refreshResponse.data.data.access_token);
+      } catch (err) {
+        return false;
       }
-
-      return;
     }
+
     try {
       const userResponse = await axios.get(backend_url + "/api/auth/getUser", {
         headers: { Authorization: `Bearer ${token}` },
@@ -60,37 +52,28 @@ const GeneralContextProvider = (props) => {
       if (userResponse.status === 200) {
         localStorage.setItem("hasLoggedInBefore", "true");
         setUserData(userResponse.data.data);
-        console.log("✅ userData:", userResponse.data.data);
+        return true;
       }
-    } catch (e) {
-      if (e.response && e.response.status === 401) {
-        console.log("⚠️ Token expired, refreshing...");
+    } catch (err) {
+      // Access token expired -> try refresh
+      if (err.response?.status === 401) {
         try {
           const refreshResponse = await axios.get(
             backend_url + "/api/auth/refresh"
           );
-
-          if (refreshResponse.status === 200) {
-            localStorage.setItem(
-              "accessToken",
-              refreshResponse.data.data.access_token
-            );
-
-            await getUser(refreshResponse.data.data.access_token);
-          }
-        } catch (refreshErr) {
-          if (refreshErr.response && refreshErr.response.status === 403) {
-            if (hasLoggedInBefore) {
-              setIsLogin(true);
-              navigate("/auth");
-            }
-          }
+          localStorage.setItem(
+            "accessToken",
+            refreshResponse.data.data.access_token
+          );
+          return await getUser(refreshResponse.data.data.access_token);
+        } catch {
+          return false; // ❗ Return false instead of redirect
         }
-      } else {
-        console.log("❌ Error in getUser:", e);
       }
+      return false;
     }
   };
+
   const errorToast = (message) => {
     toast.custom(
       (t) => (
@@ -137,6 +120,29 @@ const GeneralContextProvider = (props) => {
       }
     );
   };
+  const logoutUser = async () => {
+    try {
+      console.log("Before req");
+      console.log(userData);
+      
+      const response = await axios.post(backend_url+"/api/auth/logout", {userData: userData}, {
+        headers: {
+          Authorization: `Bearer ${localStorage.getItem("accessToken")}`,
+        },
+      });
+
+      if (response.status === 200) {
+        localStorage.removeItem("accessToken");
+        localStorage.removeItem("hasLoggedInBefore");
+        setUserData(null);
+        setIsLogin(true);
+        navigate("/auth");
+      }
+    } catch (e) {
+      console.log("Logout error:", e?.response?.data || e);
+    }
+  };
+
   useEffect(() => {
     async function loadData() {
       // if (!localStorage.getItem("accessToken")) return;
@@ -160,6 +166,7 @@ const GeneralContextProvider = (props) => {
     successToast,
     themeImages,
     setThemeImages,
+    logoutUser,
   };
 
   return (
@@ -170,3 +177,76 @@ const GeneralContextProvider = (props) => {
 };
 
 export default GeneralContextProvider;
+
+/*
+const getUser = async (token) => {
+    console.log("token", token);
+    const hasLoggedInBefore =
+      localStorage.getItem("hasLoggedInBefore") === "true";
+    if (token === null) {
+      try {
+        const refreshResponse = await axios.get(
+          backend_url + "/api/auth/refresh"
+        );
+        if (refreshResponse.status == 200) {
+          localStorage.setItem(
+            "accessToken",
+            refreshResponse.data.data.access_token
+          );
+          return await getUser(refreshResponse.data.data.access_token);
+        }
+      } catch (e) {
+        if (e.response && e.response.status === 403) {
+          if (hasLoggedInBefore) {
+            setIsLogin(true);
+            navigate("/auth");
+          }
+        }
+        return false;
+      }
+
+    }
+    try {
+      const userResponse = await axios.get(backend_url + "/api/auth/getUser", {
+        headers: { Authorization: `Bearer ${token}` },
+      });
+
+      if (userResponse.status === 200) {
+        localStorage.setItem("hasLoggedInBefore", "true");
+        setUserData(userResponse.data.data);
+        console.log("✅ userData:", userResponse.data.data);
+        return true;
+      }
+    } catch (e) {
+      if (e.response && e.response.status === 401) {
+        console.log("⚠️ Token expired, refreshing...");
+        try {
+          const refreshResponse = await axios.get(
+            backend_url + "/api/auth/refresh"
+          );
+
+          if (refreshResponse.status === 200) {
+            localStorage.setItem(
+              "accessToken",
+              refreshResponse.data.data.access_token
+            );
+
+            return await getUser(refreshResponse.data.data.access_token);
+          }
+        } catch (refreshErr) {
+          if (refreshErr.response && refreshErr.response.status === 403) {
+            if (hasLoggedInBefore) {
+              setIsLogin(true);
+              navigate("/auth");
+            }
+          }
+          return false;
+        }
+      } else {
+        console.log("❌ Error in getUser:", e);
+        return false;
+      }
+    }
+  };
+
+*/

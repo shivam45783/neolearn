@@ -9,7 +9,14 @@ import { useNavigate } from "react-router-dom";
 const Login = ({ switchToSignup }) => {
   const navigate = useNavigate();
   const { role, setRole } = useContext(StudentContext);
-  const { backend_url, setLoading, getUser, themeImages } = useContext(GeneralContext);
+  const {
+    backend_url,
+    setLoading,
+    getUser,
+    themeImages,
+    setIsLogin,
+    errorToast,
+  } = useContext(GeneralContext);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
@@ -28,9 +35,12 @@ const Login = ({ switchToSignup }) => {
 
   const onSubmitHandler = async (e) => {
     e.preventDefault();
+    if (!formData.email || !formData.password) {
+      errorToast("Please fill all the fields");
+      return;
+    }
     try {
       setLoading(true);
-      const { email, password, role } = formData;
       const response = await axios.post(
         backend_url + "/api/auth/login",
         formData
@@ -41,12 +51,31 @@ const Login = ({ switchToSignup }) => {
       if (response.status === 200) {
         const { access_token } = data;
         localStorage.setItem("accessToken", access_token);
-        localStorage.setItem("role", role);
+
         await getUser(access_token);
         setTimeout(() => navigate("/dashboard"), 0);
       }
     } catch (e) {
       console.log(e);
+      if (e.response && e.response.status === 403) {
+        errorToast(e.response.data.message);
+        setIsLogin(false);
+        navigate("/auth");
+        errorToast("Verify your email to login.");
+      } else if (e.response && e.response.status === 401) {
+        setFormData((prev) => ({
+          ...prev,
+          password: "",
+          email: "",
+        }));
+        errorToast(e.response.data.message);
+      } else if (e.response && e.response.status === 500) {
+        errorToast(e.response.data.message);
+      } else {
+        console.log(JSON.stringify(e));
+      }
+    } finally {
+      setLoading(false);
     }
   };
   return (

@@ -103,7 +103,8 @@ const registerUser = async (req, res) => {
 
 const loginUser = async (req, res) => {
   try {
-    const { email, passsword } = req.body;
+    const { email, password } = req.body;
+    console.log(email, password);
 
     const userResult =
       await prisma.$queryRaw`SELECT * FROM users WHERE email = ${email}`;
@@ -122,12 +123,12 @@ const loginUser = async (req, res) => {
         status: 403,
       });
     }
-    const hashedPassword = user.passsword;
-    const isPasswordValid = bcrypt.compareSync(passsword, hashedPassword);
+    const hashedPassword = user.password;
+    const isPasswordValid = await bcrypt.compare(password, hashedPassword);
     if (!isPasswordValid) {
       return res.status(401).json({
         success: false,
-        message: "Invalid password",
+        message: "Invalid email or password",
         status: 401,
       });
     }
@@ -263,4 +264,23 @@ const getFreshTokens = async (req, res) => {
     });
   } catch (e) {}
 };
-export { registerUser, verifyOTP, getUser, getFreshTokens, loginUser };
+
+const logoutUser = async (req, res) => {
+  try {
+    const userData = req.body.userData;
+    res.clearCookie("refresh_token");
+    console.log("userData", userData);
+    
+    await prisma.$queryRaw`UPDATE users SET refresh_token = null WHERE id = ${userData.id}`;
+    return res.json({
+      success: true,
+      message: "User logged out successfully",
+      status: 200,
+    });
+  } catch (e) {
+    res.status(500).json({ message: "Something went wrong on server" });
+    console.log(e);
+    
+  }
+};
+export { registerUser, verifyOTP, getUser, getFreshTokens, loginUser, logoutUser };

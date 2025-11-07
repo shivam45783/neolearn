@@ -2,6 +2,7 @@ import {
   getFreshTokens,
   getUser,
   loginUser,
+  logoutUser,
   registerUser,
   verifyOTP,
 } from "../controllers/auth.controller.js";
@@ -14,4 +15,5 @@ authRouter.post("/verify-otp", verifyOTP);
 authRouter.get("/getUser", authMiddleware, getUser);
 authRouter.get("/refresh", getFreshTokens);
 authRouter.post("/login", loginUser);
+authRouter.post("/logout", logoutUser);
 export default authRouter;
